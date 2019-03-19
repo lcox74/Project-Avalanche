@@ -17,6 +17,7 @@
 
 #include "Engine/Graphics/Shader.h"
 #include "Engine/Graphics/Texture.h"
+#include "Engine/Graphics/Model.h"
 
 // Initialising Functions
 void framebuffer_size_callback (GLFWwindow* window, int width, int height);
@@ -24,24 +25,13 @@ void mouse_callback (GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput (GLFWwindow *window);
 
-float vertices[] = {
-	// positions          // colors           // texture coords
-	 0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,   // top right
-	 0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,   // bottom right
-	-0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,   // bottom left
-	-0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f    // top left 
-};
-
-unsigned int indices[] = {  // note that we start from 0!
-	0, 1, 3,   // first triangle
-	1, 2, 3    // second triangle
-};
+const unsigned int winWIDTH = 800;
+const unsigned int winHEIGHT = 600;
 
 bool wireframeMode = false;
 
-glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
-glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
-glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+// lighting
+glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
 
 float deltaTime = 0.0f;	// Time between current frame and last frame
 float lastFrame = 0.0f; // Time of last frame
@@ -70,7 +60,7 @@ int main()
 #endif
 
 	// GLFW Window
-	GLFWwindow* window = glfwCreateWindow(800, 600, "Avalanche", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(winWIDTH, winHEIGHT, "Avalanche", NULL, NULL);
 	if (window == NULL)
 	{
 		std::cout << "Failed to create GLFW window" << std::endl;
@@ -94,51 +84,16 @@ int main()
 	glfwSetCursorPosCallback(window, mouse_callback);
 	glfwSetScrollCallback(window, scroll_callback);
 
-	// Anti-Aliasing
-	glEnable(GL_MULTISAMPLE);
-
-	Shader basicShader("Assets/Shaders/Basic.shader");
-	//Shader basicShader("Assets/Shaders/Basic.vs", "Assets/Shaders/Basic.fs");
-
-	Texture tex1("Assets/Textures/Demo.jpg");
-	Texture tex2("Assets/Textures/test.jpg");
-
-	Cam = Camera(cameraPos, cameraUp);
-
-	// Pending Abstraction
-	// -------------------------------------------------------------------------
-
-	unsigned int VBO, VAO, EBO;
-	glGenVertexArrays(1, &VAO);
-	glGenBuffers(1, &VBO);
-	glGenBuffers(1, &EBO);
-
-	glBindVertexArray(VAO);
-
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-	// position attribute
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
-	// color attribute
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(1);
-	// texture coord attribute
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-	glEnableVertexAttribArray(2);
-
-	// tell opengl for each sampler to which texture unit it belongs to (only has to be done once)
-	// -------------------------------------------------------------------------------------------
-	basicShader.bind(); // don't forget to activate/use the shader before setting uniforms!
-	
-	basicShader.setInt("texture1", 0);
-	basicShader.setInt("texture2", 1);
-
+	glEnable(GL_MULTISAMPLE); // Anti-Aliasing
 	glEnable(GL_DEPTH_TEST);
+
+	glDepthFunc(GL_LESS);
+
+	Cam = Camera(glm::vec3(0, 0, 3));
+
+	Shader modelShader("Assets/Shaders/Basic.shader");
+	Model monkeyModel("Assets/Models/Map.obj");
+	
 
 	// Main Engine Loop
 	while (!glfwWindowShouldClose(window))
@@ -150,43 +105,48 @@ int main()
 		// Input
 		processInput(window);
 
-		glm::mat4 model = glm::mat4(1.0f);
-		glm::mat4 view = glm::mat4(1.0f);
-		glm::mat4 projection;
-
-		model = glm::rotate(model, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
-		//projection = glm::perspective(glm::radians(fov), 800.0f / 600.0f, 0.1f, 1000.0f);
-		projection = Cam.GetProjectionMatrix(800.0f, 600.0f);
-		//view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
-		view = Cam.GetViewMatrix();
-
-		basicShader.setMat4("projection", projection);
-		basicShader.setMat4("view", view);
-		basicShader.setMat4("model", model);
-
 		// Rendering here
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		glPolygonMode(GL_FRONT_AND_BACK, wireframeMode ? GL_LINE : GL_FILL);
 
-		// bind textures on corresponding texture units
-		tex1.bind();
-		tex2.bind(1);
+		glm::mat4 model = glm::mat4(1.0f);
+		glm::mat4 view = glm::mat4(1.0f);
+		glm::mat4 projection;
 
-		// render container
-		basicShader.bind();
-		glBindVertexArray(VAO);
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		//model = glm::rotate(model, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+		projection = Cam.GetProjectionMatrix((float)winWIDTH, (float)winHEIGHT);
+		view = Cam.GetViewMatrix();
+
+		model = glm::translate(model, glm::vec3(3.0f, -0.35f, 0.0f)); // translate it down so it's at the center of the scene
+		model = glm::scale(model, glm::vec3(1.5f, 1.5f, 1.5f));
+
+		modelShader.bind();
+
+		modelShader.setMat4("projection", projection);
+		modelShader.setMat4("view", view);
+		modelShader.setMat4("model", model);
+
+		modelShader.setVec3("viewPos", Cam.Position);
+		modelShader.setVec3("light.position", glm::vec3(3.0f, 3.5f, 2.0f));
+
+		modelShader.setVec3("material.ambient", 1.0f, 0.5f, 0.31f);
+		modelShader.setVec3("material.diffuse", 1.0f, 0.5f, 0.31f);
+		modelShader.setVec3("material.specular", 0.5f, 0.5f, 0.5f);
+		modelShader.setFloat("material.shininess", 32.0f);
+
+		modelShader.setVec3("light.ambient", 0.2f, 0.2f, 0.2f);
+		modelShader.setVec3("light.diffuse", 0.5f, 0.5f, 0.5f); // darken the light a bit to fit the scene
+		modelShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
+
+		monkeyModel.Draw(modelShader);
+		
 		
 		// Check events and swap buffers
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
-
-	glDeleteVertexArrays(1, &VAO);
-	glDeleteBuffers(1, &VBO);
-	glDeleteBuffers(1, &EBO);
 
 	glfwTerminate();
 	return 0;

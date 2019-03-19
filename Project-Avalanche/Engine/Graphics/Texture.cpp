@@ -7,16 +7,19 @@
 #endif
 #include "stb_image.h"
 
-#include <iostream>
-
-Texture::Texture()
+Texture::Texture(TextureType _type)
 {
+	type = _type;
+
 	// Create a id place for a future texture
 	glGenTextures(1, &id);
 	glBindTexture(GL_TEXTURE_2D, id);
 }
-Texture::Texture(const char* file)
+Texture::Texture(const char* file, TextureType _type)
 {
+	type = _type;
+	path = file;
+
 	glGenTextures(1, &id);
 	glBindTexture(GL_TEXTURE_2D, id);
 
@@ -41,8 +44,11 @@ Texture::Texture(const char* file)
 	stbi_image_free(data);
 }
 
-void Texture::LoadTexture(const char* file)
+void Texture::LoadTexture(const char* file, TextureType _type)
 {
+	type = _type;
+	path = file;
+
 	// Setting Image parameters
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
