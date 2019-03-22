@@ -14,7 +14,7 @@ class Shader
 public:
 	unsigned int id;
 
-	Shader(const char* shaderPath);
+	Shader(const char* shaderPath = "Assets/Shaders/_Default.shader");
 	Shader(const char* vertexPath, const char* fragmentPath);
 
 	void bind();

@@ -30,6 +30,9 @@
     <ClCompile Include="Engine\Camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Graphics\Material.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Graphics\Shader.h">
@@ -45,6 +48,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Graphics\Model.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Gameobject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Graphics\Material.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -64,11 +73,40 @@
     <Image Include="Assets\Textures\WoodenContainerSpec.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="Assets\Materials\_Default\defaultA.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\Materials\_Default\defaultAO.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\Materials\_Default\defaultM.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\Materials\_Default\defaultN.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\Materials\_Default\defaultR.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\Materials\Car\AE86_Texture.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\Materials\Car\ao.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\Materials\Car\metallic.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\Materials\Car\normal.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\Materials\Car\roughness.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\Shaders\Basic.shader" />
-    <None Include="Assets\Shaders\Colours.shader" />
-    <None Include="Assets\Shaders\Lamp.shader" />
-    <None Include="Assets\Shaders\Lightmaps.shader" />
+    <None Include="Assets\Shaders\_Default.shader" />
+    <None Include="Assets\Materials\_Default\_Default.mt" />
+    <None Include="Assets\Materials\Car\_Default.mt" />
   </ItemGroup>
 </Project>

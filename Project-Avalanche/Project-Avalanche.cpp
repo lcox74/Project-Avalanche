@@ -18,6 +18,7 @@
 #include "Engine/Graphics/Shader.h"
 #include "Engine/Graphics/Texture.h"
 #include "Engine/Graphics/Model.h"
+#include "Engine/Graphics/Material.h"
 
 // Initialising Functions
 void framebuffer_size_callback (GLFWwindow* window, int width, int height);
@@ -30,19 +31,30 @@ const unsigned int winHEIGHT = 600;
 
 bool wireframeMode = false;
 
-// lighting
-glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
-
 float deltaTime = 0.0f;	// Time between current frame and last frame
 float lastFrame = 0.0f; // Time of last frame
 
 // Mouse
 float lastX = 400, lastY = 300;
 bool firstMouse = true;
-float yaw, pitch;
-float fov = 45.0f;
+
 
 Camera Cam;
+
+glm::vec3 lightPos[5] = {
+	glm::vec3( 1.5f, 2.3f,  5.2f),
+	glm::vec3(-1.4f, 1.3f,  5.3f),
+	glm::vec3(-0.7f, 2.0f,  5.3f),
+	glm::vec3( 2.9f, 2.8f,  1.0f),
+	glm::vec3( 1.5f, 0.4f, -2.9f)
+};
+glm::vec3 lightCol[5] = {
+	glm::vec3(1, 1, 1),
+	glm::vec3(0, 1, 1),
+	glm::vec3(1, 1, 0),
+	glm::vec3(1, 0, 1),
+	glm::vec3(0, 0, 1),
+};
 
 int main()
 {
@@ -91,9 +103,11 @@ int main()
 
 	Cam = Camera(glm::vec3(0, 0, 3));
 
-	Shader modelShader("Assets/Shaders/Basic.shader");
-	Model monkeyModel("Assets/Models/Map.obj");
-	
+	//Model sphere("Assets/Models/Sphere.blend");
+	Model car("Assets/Models/TOYOTA AE86 PROJECT/Drifting Game Physics Concept.obj");
+
+	//Material mat("Assets/Materials/_Default/_Default.mt");
+	Material carMat("Assets/Materials/Car/Car.mt");
 
 	// Main Engine Loop
 	while (!glfwWindowShouldClose(window))
@@ -115,33 +129,12 @@ int main()
 		glm::mat4 view = glm::mat4(1.0f);
 		glm::mat4 projection;
 
-		//model = glm::rotate(model, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
 		projection = Cam.GetProjectionMatrix((float)winWIDTH, (float)winHEIGHT);
 		view = Cam.GetViewMatrix();
+		model = glm::translate(model, glm::vec3(1.0f, 0.0f, 2.0f));
 
-		model = glm::translate(model, glm::vec3(3.0f, -0.35f, 0.0f)); // translate it down so it's at the center of the scene
-		model = glm::scale(model, glm::vec3(1.5f, 1.5f, 1.5f));
-
-		modelShader.bind();
-
-		modelShader.setMat4("projection", projection);
-		modelShader.setMat4("view", view);
-		modelShader.setMat4("model", model);
-
-		modelShader.setVec3("viewPos", Cam.Position);
-		modelShader.setVec3("light.position", glm::vec3(3.0f, 3.5f, 2.0f));
-
-		modelShader.setVec3("material.ambient", 1.0f, 0.5f, 0.31f);
-		modelShader.setVec3("material.diffuse", 1.0f, 0.5f, 0.31f);
-		modelShader.setVec3("material.specular", 0.5f, 0.5f, 0.5f);
-		modelShader.setFloat("material.shininess", 32.0f);
-
-		modelShader.setVec3("light.ambient", 0.2f, 0.2f, 0.2f);
-		modelShader.setVec3("light.diffuse", 0.5f, 0.5f, 0.5f); // darken the light a bit to fit the scene
-		modelShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
-
-		monkeyModel.Draw(modelShader);
-		
+		carMat.bind(Cam.Position, model, view, projection, lightPos, lightCol);
+		car.Draw(carMat.shader);
 		
 		// Check events and swap buffers
 		glfwSwapBuffers(window);

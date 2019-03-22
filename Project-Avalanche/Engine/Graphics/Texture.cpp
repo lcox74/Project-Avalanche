@@ -29,7 +29,7 @@ Texture::Texture(const char* file, TextureType _type)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-	stbi_set_flip_vertically_on_load(true);
+	//stbi_set_flip_vertically_on_load(true);
 
 	unsigned char *data = stbi_load(file, &width, &height, &nrChannels, 4);
 	if (data)
@@ -55,7 +55,7 @@ void Texture::LoadTexture(const char* file, TextureType _type)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-	stbi_set_flip_vertically_on_load(true);
+	//stbi_set_flip_vertically_on_load(true);
 
 	unsigned char *data = stbi_load(file, &width, &height, &nrChannels, 4);
 	if (data)

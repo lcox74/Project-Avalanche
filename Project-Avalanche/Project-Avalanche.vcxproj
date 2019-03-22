@@ -165,24 +165,36 @@
   <ItemGroup>
     <ClCompile Include="..\Dependencies\GLAD\src\glad.c" />
     <ClCompile Include="Engine\Camera.cpp" />
+    <ClCompile Include="Engine\Graphics\Material.cpp" />
     <ClCompile Include="Engine\Graphics\Shader.cpp" />
     <ClCompile Include="Engine\Graphics\Texture.cpp" />
     <ClCompile Include="Project-Avalanche.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\Shaders\Basic.shader" />
-    <None Include="Assets\Shaders\Colours.shader" />
-    <None Include="Assets\Shaders\Lamp.shader" />
-    <None Include="Assets\Shaders\Lightmaps.shader" />
+    <None Include="Assets\Materials\Car\_Default.mt" />
+    <None Include="Assets\Materials\_Default\_Default.mt" />
+    <None Include="Assets\Shaders\_Default.shader" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Camera.h" />
+    <ClInclude Include="Engine\Gameobject.h" />
+    <ClInclude Include="Engine\Graphics\Material.h" />
     <ClInclude Include="Engine\Graphics\Mesh.h" />
     <ClInclude Include="Engine\Graphics\Shader.h" />
     <ClInclude Include="Engine\Graphics\Texture.h" />
     <ClInclude Include="Engine\Graphics\Model.h" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="Assets\Materials\Car\AE86_Texture.png" />
+    <Image Include="Assets\Materials\Car\ao.png" />
+    <Image Include="Assets\Materials\Car\metallic.png" />
+    <Image Include="Assets\Materials\Car\normal.png" />
+    <Image Include="Assets\Materials\Car\roughness.png" />
+    <Image Include="Assets\Materials\_Default\defaultA.png" />
+    <Image Include="Assets\Materials\_Default\defaultAO.png" />
+    <Image Include="Assets\Materials\_Default\defaultM.png" />
+    <Image Include="Assets\Materials\_Default\defaultN.png" />
+    <Image Include="Assets\Materials\_Default\defaultR.png" />
     <Image Include="Assets\Textures\Demo.jpg" />
     <Image Include="Assets\Textures\test.jpg" />
     <Image Include="Assets\Textures\test.png" />
