@@ -31,6 +31,7 @@ public:
 	std::string directory;
 	bool gammaCorrection;
 
+	Model() {}
 	Model(std::string const &path, bool gamma = false) : gammaCorrection(gamma)
 	{
 		loadModel(path);

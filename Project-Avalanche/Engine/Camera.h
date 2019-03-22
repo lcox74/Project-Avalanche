@@ -22,6 +22,8 @@ const float PITCH = 0.0f;
 const float SENSITIVITY = 0.1f;
 const float FOV = 60.0f;
 
+const int nWidth = 800, nHeight = 600;
+
 class Camera
 {
 public:
@@ -41,13 +43,17 @@ public:
 	float Near = 0.1f;
 	float Far = 1000.0f;
 
+	int nWidth, nHeight;
+
 	ViewMode viewMode = ViewMode::PERSPECTIVE;
 
 	Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = YAW, float pitch = PITCH);
 	Camera(float posX, float posY, float posZ, float upX, float upY, float upZ, float yaw, float pitch);
 
 	glm::mat4 GetViewMatrix();
-	glm::mat4 GetProjectionMatrix(float width, float height, float left = 0.0f, float bottom = 0.0f);
+	glm::mat4 GetProjectionMatrix();
+
+	void setViewPort(int width, int height);
 
 	// In-built Camera Movement
 	void fpsCameraLook(float deltaX, float deltaY, bool constrainPitch = true);

@@ -3,6 +3,7 @@
 
 #include "Shader.h"
 #include "Texture.h"
+#include "../Light.h"
 
 #include <glm/glm.hpp>
 
@@ -19,7 +20,7 @@ public:
 
 	void LoadMaterial(const char* file = "Assets/Materials/_Default/_Default.mt");
 	void LoadShader(const char* file = "Assets/Shaders/_Default.shader");
-	void bind(glm::vec3 cameraPos, glm::mat4 M, glm::mat4 V, glm::mat4 P, glm::vec3 Lp[5], glm::vec3 Lc[5]);
+	void bind(glm::vec3 cameraPos, glm::mat4 M, glm::mat4 V, glm::mat4 P, Light lights[5]);
 
 	//virtual void customBind() = 0;
 

@@ -59,7 +59,7 @@ void Material::LoadMaterial(const char* file)
 
 void Material::LoadShader(const char* file) { this->shader = Shader(file); }
 
-void Material::bind(glm::vec3 cameraPos, glm::mat4 M, glm::mat4 V, glm::mat4 P, glm::vec3 Lp[5], glm::vec3 Lc[5])
+void Material::bind(glm::vec3 cameraPos, glm::mat4 M, glm::mat4 V, glm::mat4 P, Light lights[5])
 {
 	// Bind Shader
 	shader.bind();
@@ -71,16 +71,16 @@ void Material::bind(glm::vec3 cameraPos, glm::mat4 M, glm::mat4 V, glm::mat4 P, 
 
 	shader.setVec3("camPos", cameraPos);
 
-	shader.setVec3("lights[0].position", Lp[0]);
-	shader.setVec3("lights[0].colour", Lc[0]);
-	shader.setVec3("lights[1].position", Lp[1]);
-	shader.setVec3("lights[1].colour", Lc[1]);
-	shader.setVec3("lights[2].position", Lp[2]);
-	shader.setVec3("lights[2].colour", Lc[2]);
-	shader.setVec3("lights[3].position", Lp[3]);
-	shader.setVec3("lights[3].colour", Lc[3]);
-	shader.setVec3("lights[4].position", Lp[4]);
-	shader.setVec3("lights[4].colour", Lc[4]);
+	shader.setVec3("lights[0].position", lights[0].position);
+	shader.setVec3("lights[0].colour", lights[0].colour);
+	shader.setVec3("lights[1].position", lights[1].position);
+	shader.setVec3("lights[1].colour", lights[1].colour);
+	shader.setVec3("lights[2].position", lights[2].position);
+	shader.setVec3("lights[2].colour", lights[2].colour);
+	shader.setVec3("lights[3].position", lights[3].position);
+	shader.setVec3("lights[3].colour", lights[3].colour);
+	shader.setVec3("lights[4].position", lights[4].position);
+	shader.setVec3("lights[4].colour", lights[4].colour);
 
 	int slot = 0;
 	for (auto const& x : textures)

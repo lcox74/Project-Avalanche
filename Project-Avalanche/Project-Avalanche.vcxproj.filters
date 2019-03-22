@@ -56,6 +56,18 @@
     <ClInclude Include="Engine\Graphics\Material.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\AcalancheEngine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Car.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Light.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Sphere.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\Textures\Demo.jpg">
@@ -107,6 +119,6 @@
   <ItemGroup>
     <None Include="Assets\Shaders\_Default.shader" />
     <None Include="Assets\Materials\_Default\_Default.mt" />
-    <None Include="Assets\Materials\Car\_Default.mt" />
+    <None Include="Assets\Materials\Car\Car.mt" />
   </ItemGroup>
 </Project>

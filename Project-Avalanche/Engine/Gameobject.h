@@ -4,17 +4,51 @@
 #include "glm/gtx/quaternion.hpp"
 #include "glm/gtc/quaternion.hpp"
 
-#include "Graphics/Shader.h"
+#include <iostream>
+
+#include "Graphics/Material.h"
+#include "Graphics/Model.h"
+
+#include "Camera.h"
 
 class Gameobject
 {
-	glm::vec3 position, rotation, scale;
+protected:
+	glm::quat Rotation;
 
-	Gameobject();
-	//virtual ~Gameobject();
+	Material material;
+	Model model;
 
-	virtual void Draw ();
-	virtual void Update (float deltaTime);
+	Camera *camera;
+
+public:
+	glm::vec3 position = glm::vec3(0, 0, 0), 
+			  rotation = glm::vec3(0, 0, 0), 
+			  scale = glm::vec3(1, 1, 1);
+
+	Gameobject(Camera &cam, Model obj, Material mat) 
+	{ 
+		camera = &cam; 
+		model = obj;
+		material = mat;
+	}
+	virtual ~Gameobject() { std::cout << "Object Destroyed" << std::endl; }
+
+	virtual void Update (float deltaTime) = 0;
+
+	void Draw(Light lights[5])
+	{
+		glm::mat4 M = glm::mat4(1.0f);
+		glm::mat4 V = glm::mat4(1.0f);
+		glm::mat4 P;
+
+		M = ModelMatrix();
+		V = camera->GetViewMatrix();
+		P = camera->GetProjectionMatrix();
+
+		material.bind(camera->Position, M, V, P, lights);
+		model.Draw(material.shader);
+	}
 
 	glm::mat4 ModelMatrix()
 	{
@@ -26,9 +60,4 @@ class Gameobject
 		model *= glm::toMat4(Rotation);
 		return model;
 	}
-
-private:
-	glm::quat Rotation;
-
-	Shader shader;
 };

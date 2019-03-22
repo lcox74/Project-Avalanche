@@ -4,6 +4,7 @@
 #include <glad/glad.h>
 #include <glfw3.h>
 
+#define GLM_ENABLE_EXPERIMENTAL
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -13,12 +14,10 @@
 #include <string>
 #include <sstream>
 
-#include "Engine/Camera.h"
+#include "Engine/AcalancheEngine.h"
 
-#include "Engine/Graphics/Shader.h"
-#include "Engine/Graphics/Texture.h"
-#include "Engine/Graphics/Model.h"
-#include "Engine/Graphics/Material.h"
+#include "Project/Car.h"
+#include "Project/Sphere.h"
 
 // Initialising Functions
 void framebuffer_size_callback (GLFWwindow* window, int width, int height);
@@ -41,19 +40,12 @@ bool firstMouse = true;
 
 Camera Cam;
 
-glm::vec3 lightPos[5] = {
-	glm::vec3( 1.5f, 2.3f,  5.2f),
-	glm::vec3(-1.4f, 1.3f,  5.3f),
-	glm::vec3(-0.7f, 2.0f,  5.3f),
-	glm::vec3( 2.9f, 2.8f,  1.0f),
-	glm::vec3( 1.5f, 0.4f, -2.9f)
-};
-glm::vec3 lightCol[5] = {
-	glm::vec3(1, 1, 1),
-	glm::vec3(0, 1, 1),
-	glm::vec3(1, 1, 0),
-	glm::vec3(1, 0, 1),
-	glm::vec3(0, 0, 1),
+Light lights[5] = {
+	Light(glm::vec3(1.5f,  2.3f,  5.2f), glm::vec3(1, 1, 1)),
+	Light(glm::vec3(-1.4f,  1.3f,  5.3f), glm::vec3(1, 1, 1)),
+	Light(glm::vec3(-0.7f,  2.0f,  5.3f), glm::vec3(1, 1, 1)),
+	Light(glm::vec3(2.9f,  2.8f,  1.0f), glm::vec3(1, 1, 1)),
+	Light(glm::vec3(1.5f,  0.4f, -2.9f), glm::vec3(1, 1, 1))
 };
 
 int main()
@@ -102,12 +94,17 @@ int main()
 	glDepthFunc(GL_LESS);
 
 	Cam = Camera(glm::vec3(0, 0, 3));
+	Cam.nWidth = winWIDTH;
+	Cam.nHeight = winHEIGHT;
 
 	//Model sphere("Assets/Models/Sphere.blend");
-	Model car("Assets/Models/TOYOTA AE86 PROJECT/Drifting Game Physics Concept.obj");
+	//Model car("Assets/Models/TOYOTA AE86 PROJECT/Drifting Game Physics Concept.obj");
 
 	//Material mat("Assets/Materials/_Default/_Default.mt");
-	Material carMat("Assets/Materials/Car/Car.mt");
+	//Material carMat("Assets/Materials/Car/Car.mt");
+
+	Car player(glm::vec3(1.0f, 0.0f, 9.0f), Cam);
+	Sphere ball(glm::vec3(4.0f, 0.0f, 2.0f), Cam);
 
 	// Main Engine Loop
 	while (!glfwWindowShouldClose(window))
@@ -125,16 +122,11 @@ int main()
 
 		glPolygonMode(GL_FRONT_AND_BACK, wireframeMode ? GL_LINE : GL_FILL);
 
-		glm::mat4 model = glm::mat4(1.0f);
-		glm::mat4 view = glm::mat4(1.0f);
-		glm::mat4 projection;
+		player.Update(deltaTime);
+		player.Draw(lights);
 
-		projection = Cam.GetProjectionMatrix((float)winWIDTH, (float)winHEIGHT);
-		view = Cam.GetViewMatrix();
-		model = glm::translate(model, glm::vec3(1.0f, 0.0f, 2.0f));
-
-		carMat.bind(Cam.Position, model, view, projection, lightPos, lightCol);
-		car.Draw(carMat.shader);
+		ball.Update(deltaTime);
+		ball.Draw(lights);
 		
 		// Check events and swap buffers
 		glfwSwapBuffers(window);

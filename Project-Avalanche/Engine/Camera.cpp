@@ -24,17 +24,25 @@ glm::mat4 Camera::GetViewMatrix()
 	return glm::lookAt(Position, Position + Forward, WorldUp);
 }
 
-glm::mat4 Camera::GetProjectionMatrix(float width, float height, float left, float bottom)
+glm::mat4 Camera::GetProjectionMatrix()
 {
 	switch (viewMode)
 	{
 	case ViewMode::PERSPECTIVE:
-		return glm::perspective(glm::radians(Fov), width / height, Near, Far);
+		return glm::perspective(glm::radians(Fov), (float)nWidth / (float)nHeight, Near, Far);
 	case ViewMode::ORTHOGRAPHIC:
-		return glm::ortho(left, width, bottom, height, Near, Far);
+		//return glm::ortho(left, width, bottom, height, Near, Far);
+		break;
 	default:
-		return glm::perspective(glm::radians(Fov), width / height, Near, Far);
+		return glm::perspective(glm::radians(Fov), (float)nWidth / (float)nHeight, Near, Far);
 	}
+}
+
+void Camera::setViewPort(int width, int height)
+{
+	nWidth = width;
+	nHeight = height;
+	glViewport(0, 0, width, height);
 }
 
 void Camera::fpsCameraLook(float deltaX, float deltaY, bool constrainPitch)

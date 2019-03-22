@@ -171,11 +171,14 @@
     <ClCompile Include="Project-Avalanche.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\Materials\Car\_Default.mt" />
+    <None Include="Assets\Materials\Car\Car.mt" />
     <None Include="Assets\Materials\_Default\_Default.mt" />
     <None Include="Assets\Shaders\_Default.shader" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Light.h" />
+    <ClInclude Include="Project\Car.h" />
+    <ClInclude Include="Engine\AcalancheEngine.h" />
     <ClInclude Include="Engine\Camera.h" />
     <ClInclude Include="Engine\Gameobject.h" />
     <ClInclude Include="Engine\Graphics\Material.h" />
@@ -183,6 +186,7 @@
     <ClInclude Include="Engine\Graphics\Shader.h" />
     <ClInclude Include="Engine\Graphics\Texture.h" />
     <ClInclude Include="Engine\Graphics\Model.h" />
+    <ClInclude Include="Project\Sphere.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\Materials\Car\AE86_Texture.png" />
