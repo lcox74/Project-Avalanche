@@ -123,16 +123,16 @@ void main()
 	vec3 V = normalize(camPos - WorldPos);
 	vec3 R = reflect(-V, N);
 
-	vec3 F0 = vec3(0.04);
+	vec3 F0 = vec3(0.05);
 	F0 = mix(F0, _albedo, _metallic);
 
-	vec3 Lo = vec3(0.0);
+	vec3 Lo = vec3(0);
 	for (int i = 0; i < 5; ++i)
 	{
 		vec3 L = normalize(lights[i].position - WorldPos);
 		vec3 H = normalize(V + L);
 		float distance = length(lights[i].position - WorldPos);
-		float attenuation = 1.f / (distance * distance);
+		float attenuation = (1.f / (distance * distance)) + 0.3;
 		vec3 radiance = lights[i].colour * attenuation;
 
 		float NDF = DistributionGGX(N, H, _roughness);
@@ -153,6 +153,6 @@ void main()
 
 	vec3 colour = Lo;
 	colour = colour / (colour + vec3(1.0));
-	colour = pow(colour, vec3(1.0 / 2.2));
+	colour = pow(colour, vec3(1.0 / 2.5));
 	FragColor = vec4(colour, 1.0);
 }

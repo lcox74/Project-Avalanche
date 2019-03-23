@@ -25,10 +25,13 @@ void mouse_callback (GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput (GLFWwindow *window);
 
+void CameraFollowTarget(Car target, float height, float distance, float t);
+
 const unsigned int winWIDTH = 800;
 const unsigned int winHEIGHT = 600;
 
 bool wireframeMode = false;
+bool unlockCam = false;
 
 float deltaTime = 0.0f;	// Time between current frame and last frame
 float lastFrame = 0.0f; // Time of last frame
@@ -41,11 +44,11 @@ bool firstMouse = true;
 Camera Cam;
 
 Light lights[5] = {
-	Light(glm::vec3(1.5f,  2.3f,  5.2f), glm::vec3(1, 1, 1)),
-	Light(glm::vec3(-1.4f,  1.3f,  5.3f), glm::vec3(1, 1, 1)),
-	Light(glm::vec3(-0.7f,  2.0f,  5.3f), glm::vec3(1, 1, 1)),
+	Light(glm::vec3(1.5f,  3.3f,  5.2f), glm::vec3(1, 1, 1)),
+	Light(glm::vec3(-1.4f,  4.3f,  5.3f), glm::vec3(1, 1, 1)),
+	Light(glm::vec3(-0.7f,  3.0f,  5.3f), glm::vec3(1, 1, 1)),
 	Light(glm::vec3(2.9f,  2.8f,  1.0f), glm::vec3(1, 1, 1)),
-	Light(glm::vec3(1.5f,  0.4f, -2.9f), glm::vec3(1, 1, 1))
+	Light(glm::vec3(1.5f,  3.4f, -2.9f), glm::vec3(1, 1, 1))
 };
 
 int main()
@@ -103,8 +106,10 @@ int main()
 	//Material mat("Assets/Materials/_Default/_Default.mt");
 	//Material carMat("Assets/Materials/Car/Car.mt");
 
-	Car player(glm::vec3(1.0f, 0.0f, 9.0f), Cam);
-	Sphere ball(glm::vec3(4.0f, 0.0f, 2.0f), Cam);
+	Sphere ball(glm::vec3(0.0f, -0.1f, 0.0f), Cam, Model("Assets/Models/Cube.obj"));
+	ball.scale = glm::vec3(40, 0.1, 40);
+	Car player = Car(glm::vec3(1.0f, 0.0f, 9.0f), Cam);
+	
 
 	// Main Engine Loop
 	while (!glfwWindowShouldClose(window))
@@ -116,16 +121,19 @@ int main()
 		// Input
 		processInput(window);
 
+		if (!unlockCam)
+			CameraFollowTarget(player, 4.5f, 10, 5.0f * deltaTime);
+
 		// Rendering here
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		glPolygonMode(GL_FRONT_AND_BACK, wireframeMode ? GL_LINE : GL_FILL);
 
-		player.Update(deltaTime);
+		player.Update(deltaTime, window);
 		player.Draw(lights);
 
-		ball.Update(deltaTime);
+		ball.Update(deltaTime, window);
 		ball.Draw(lights);
 		
 		// Check events and swap buffers
@@ -135,6 +143,22 @@ int main()
 
 	glfwTerminate();
 	return 0;
+}
+
+glm::vec3 lerp(glm::vec3 a, glm::vec3 b, float t)
+{
+	return (1.0f - t) * a + t * b;
+}
+
+void CameraFollowTarget(Car target, float height, float distance, float t)
+{
+	glm::vec3 temp = target.position + glm::vec3(0, height, 0);
+	temp -= target.forward * distance;
+	Cam.Position = lerp(Cam.Position, temp, t);
+
+	glm::vec3 tempLookAt = target.position + (target.forward * distance / 2.0f);
+
+	Cam.lookAt(tempLookAt);
 }
 
 // Resize Event Handling
@@ -157,7 +181,8 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 	lastX = (float)xpos;
 	lastY = (float)ypos;
 
-	Cam.fpsCameraLook(xoffset, yoffset);
+	if (unlockCam)
+		Cam.fpsCameraLook(xoffset, yoffset);
 }
 
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
@@ -176,13 +201,26 @@ void processInput(GLFWwindow *window)
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
 
-	float cameraSpeed = 2.5f * deltaTime; // adjust accordingly
-	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-		Cam.Position += cameraSpeed * Cam.Forward;
-	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-		Cam.Position -= cameraSpeed * Cam.Forward;
-	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-		Cam.Position -= glm::normalize(glm::cross(Cam.Forward, Cam.Up)) * cameraSpeed;
-	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-		Cam.Position += glm::normalize(glm::cross(Cam.Forward, Cam.Up)) * cameraSpeed;
+	float cameraSpeed = (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) ? 3.8f * deltaTime * 2.5f : 3.8f * deltaTime;
+	
+	if (unlockCam)
+	{
+		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+			Cam.Position += cameraSpeed * Cam.Forward;
+		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+			Cam.Position -= cameraSpeed * Cam.Forward;
+		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+			Cam.Position -= glm::normalize(glm::cross(Cam.Forward, Cam.Up)) * cameraSpeed;
+		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+			Cam.Position += glm::normalize(glm::cross(Cam.Forward, Cam.Up)) * cameraSpeed;
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+		unlockCam = true;
+	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
+		unlockCam = false;
+	if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS)
+		wireframeMode = true;
+	if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS)
+		wireframeMode = false;
 }

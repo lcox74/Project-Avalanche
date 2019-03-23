@@ -58,6 +58,8 @@ public:
 	// In-built Camera Movement
 	void fpsCameraLook(float deltaX, float deltaY, bool constrainPitch = true);
 
+	void lookAt(glm::vec3 target);
+
 	void updateCameraVectors();
 
 };

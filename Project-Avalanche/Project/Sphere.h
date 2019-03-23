@@ -16,9 +16,9 @@ public:
 		position = pos;
 	}
 
-	void Update(float deltaTime) override
+	void Update(float deltaTime, GLFWwindow *window) override
 	{
-		rotation += glm::vec3(0, deltaTime, 0);
+		//rotation += glm::vec3(0, deltaTime, 0);
 	}
 };
 

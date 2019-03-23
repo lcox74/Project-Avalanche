@@ -1,5 +1,6 @@
 #pragma once
 
+#define GLM_ENABLE_EXPERIMENTAL
 #include "glm/glm.hpp"
 #include "glm/gtx/quaternion.hpp"
 #include "glm/gtc/quaternion.hpp"
@@ -21,20 +22,27 @@ protected:
 
 	Camera *camera;
 
+	glm::mat4 modelMat = glm::mat4(1.0f);
+
 public:
-	glm::vec3 position = glm::vec3(0, 0, 0), 
+	glm::vec3 position = glm::vec3(0, 0, 0),
+			  forward = glm::vec3(0, 0, 1),
 			  rotation = glm::vec3(0, 0, 0), 
 			  scale = glm::vec3(1, 1, 1);
 
+	Gameobject() { }
 	Gameobject(Camera &cam, Model obj, Material mat) 
 	{ 
 		camera = &cam; 
 		model = obj;
 		material = mat;
 	}
-	virtual ~Gameobject() { std::cout << "Object Destroyed" << std::endl; }
 
-	virtual void Update (float deltaTime) = 0;
+	virtual void Update (float deltaTime, GLFWwindow *window) = 0;
+
+	void setCamera (Camera &cam) { camera = &cam; }
+	void setMaterial (Material mat) { material = mat; }
+	void setModel (Model mod) { model = mod; }
 
 	void Draw(Light lights[5])
 	{
@@ -58,6 +66,13 @@ public:
 		model = glm::translate(model, position);
 		model = glm::scale(model, scale);
 		model *= glm::toMat4(Rotation);
+
+		modelMat = model;
+
+		forward.x = sin(rotation.y);
+		forward.y = -tan(rotation.x);
+		forward.z = cos(rotation.y);
+
 		return model;
 	}
 };

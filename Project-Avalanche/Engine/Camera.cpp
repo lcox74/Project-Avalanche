@@ -30,9 +30,9 @@ glm::mat4 Camera::GetProjectionMatrix()
 	{
 	case ViewMode::PERSPECTIVE:
 		return glm::perspective(glm::radians(Fov), (float)nWidth / (float)nHeight, Near, Far);
-	case ViewMode::ORTHOGRAPHIC:
+	//case ViewMode::ORTHOGRAPHIC:
 		//return glm::ortho(left, width, bottom, height, Near, Far);
-		break;
+	//	break;
 	default:
 		return glm::perspective(glm::radians(Fov), (float)nWidth / (float)nHeight, Near, Far);
 	}
@@ -76,4 +76,9 @@ void Camera::updateCameraVectors()
 	// Also re-calculate the Right and Up vector
 	Right = glm::normalize(glm::cross(Forward, WorldUp));
 	Up = glm::normalize(glm::cross(Right, Forward));
+}
+
+void Camera::lookAt(glm::vec3 target)
+{
+	Forward = glm::normalize(target - Position);
 }

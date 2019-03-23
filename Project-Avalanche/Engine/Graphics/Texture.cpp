@@ -39,7 +39,7 @@ Texture::Texture(const char* file, TextureType _type)
 	}
 	else
 	{
-		std::cout << "Failed to load texture" << std::endl;
+		std::cout << "Failed to load texture: " << file << std::endl;
 	}
 	stbi_image_free(data);
 }
