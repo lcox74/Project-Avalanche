@@ -58,6 +58,24 @@ public:
 		model.Draw(material.shader);
 	}
 
+	void Draw(Shader s)
+	{
+		glm::mat4 M = glm::mat4(1.0f);
+		glm::mat4 V = glm::mat4(1.0f);
+		glm::mat4 P;
+
+		M = ModelMatrix();
+		V = camera->GetViewMatrix();
+		P = camera->GetProjectionMatrix();
+
+		s.bind();
+		s.setMat4("model", M);
+		s.setMat4("view", V);
+		s.setMat4("projection", P);
+
+		model.Draw(s);
+	}
+
 	glm::mat4 ModelMatrix()
 	{
 		Rotation = glm::quat(rotation);

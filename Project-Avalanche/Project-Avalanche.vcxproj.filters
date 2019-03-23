@@ -120,5 +120,6 @@
     <None Include="Assets\Shaders\_Default.shader" />
     <None Include="Assets\Materials\_Default\_Default.mt" />
     <None Include="Assets\Materials\Car\Car.mt" />
+    <None Include="Assets\Shaders\normal_visualization.shader" />
   </ItemGroup>
 </Project>

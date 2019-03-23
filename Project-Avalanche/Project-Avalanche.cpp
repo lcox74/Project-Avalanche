@@ -31,6 +31,7 @@ const unsigned int winWIDTH = 800;
 const unsigned int winHEIGHT = 600;
 
 bool wireframeMode = false;
+bool normalsMode = false;
 bool unlockCam = false;
 
 float deltaTime = 0.0f;	// Time between current frame and last frame
@@ -92,8 +93,11 @@ int main()
 	glfwSetScrollCallback(window, scroll_callback);
 
 	glEnable(GL_MULTISAMPLE); // Anti-Aliasing
-	glEnable(GL_DEPTH_TEST);
+	
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
 
+	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
 
 	Cam = Camera(glm::vec3(0, 0, 3));
@@ -110,6 +114,11 @@ int main()
 	ball.scale = glm::vec3(40, 0.1, 40);
 	Car player = Car(glm::vec3(1.0f, 0.0f, 9.0f), Cam);
 	
+	Shader normalShader("Assets/Shaders/normal_visualization.shader");
+
+
+	std::vector<float> deltaTimeVec;
+	int maxTimeSmooth = 60;
 
 	// Main Engine Loop
 	while (!glfwWindowShouldClose(window))
@@ -132,13 +141,32 @@ int main()
 
 		player.Update(deltaTime, window);
 		player.Draw(lights);
+		if (normalsMode)
+			player.Draw(normalShader);
 
 		ball.Update(deltaTime, window);
 		ball.Draw(lights);
+		if (normalsMode)
+			ball.Draw(normalShader);
 		
 		// Check events and swap buffers
 		glfwSwapBuffers(window);
 		glfwPollEvents();
+
+		deltaTimeVec.push_back(deltaTime);
+		if (deltaTimeVec.size() >= maxTimeSmooth)
+		{
+			deltaTimeVec.front() = std::move(deltaTimeVec.back());
+			deltaTimeVec.pop_back();
+		}
+
+		double average = 0.0;
+		for (int i = 0; i < deltaTimeVec.size(); i++)
+			average += deltaTimeVec[i];
+		average /= deltaTimeVec.size();
+
+		std::string tempSt = "Avalanche ENGINE [FPS : " + std::to_string((int) floor(1.0f / average)) + "]";
+		glfwSetWindowTitle(window, tempSt.c_str());
 	}
 
 	glfwTerminate();
@@ -223,4 +251,8 @@ void processInput(GLFWwindow *window)
 		wireframeMode = true;
 	if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS)
 		wireframeMode = false;
+	if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS)
+		normalsMode = true;
+	if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS)
+		normalsMode = false;
 }

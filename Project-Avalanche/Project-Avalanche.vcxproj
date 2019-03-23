@@ -91,7 +91,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GLAD\include;$(SolutionDir)Dependencies\GLM;$(SolutionDir)Dependencies\GLFW\Include;$(SolutionDir)Dependencies\STB;$(SolutionDir)Dependencies\ASSIMP\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GLAD\include;$(SolutionDir)Dependencies\GLM;$(SolutionDir)Dependencies\GLFW\Include;$(SolutionDir)Dependencies\IMGUI;$(SolutionDir)Dependencies\STB;$(SolutionDir)Dependencies\ASSIMP\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -109,7 +109,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GLAD\include;$(SolutionDir)Dependencies\GLM;$(SolutionDir)Dependencies\GLFW\Include;$(SolutionDir)Dependencies\STB;$(SolutionDir)Dependencies\ASSIMP\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GLAD\include;$(SolutionDir)Dependencies\GLM;$(SolutionDir)Dependencies\GLFW\Include;$(SolutionDir)Dependencies\IMGUI;$(SolutionDir)Dependencies\STB;$(SolutionDir)Dependencies\ASSIMP\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -129,7 +129,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GLAD\include;$(SolutionDir)Dependencies\GLM;$(SolutionDir)Dependencies\GLFW\Include;$(SolutionDir)Dependencies\STB;$(SolutionDir)Dependencies\ASSIMP\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GLAD\include;$(SolutionDir)Dependencies\GLM;$(SolutionDir)Dependencies\GLFW\Include;$(SolutionDir)Dependencies\IMGUI;$(SolutionDir)Dependencies\STB;$(SolutionDir)Dependencies\ASSIMP\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -151,7 +151,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GLAD\include;$(SolutionDir)Dependencies\GLM;$(SolutionDir)Dependencies\GLFW\Include;$(SolutionDir)Dependencies\STB;$(SolutionDir)Dependencies\ASSIMP\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GLAD\include;$(SolutionDir)Dependencies\GLM;$(SolutionDir)Dependencies\GLFW\Include;$(SolutionDir)Dependencies\IMGUI;$(SolutionDir)Dependencies\STB;$(SolutionDir)Dependencies\ASSIMP\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -173,6 +173,7 @@
   <ItemGroup>
     <None Include="Assets\Materials\Car\Car.mt" />
     <None Include="Assets\Materials\_Default\_Default.mt" />
+    <None Include="Assets\Shaders\normal_visualization.shader" />
     <None Include="Assets\Shaders\_Default.shader" />
   </ItemGroup>
   <ItemGroup>

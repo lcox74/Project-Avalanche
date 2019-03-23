@@ -34,7 +34,7 @@ public:
 	void setMat4(const std::string &name, const glm::mat4 &mat) const;
 
 private:
-	void Initialise(const char* vShader, const char* fShader);
+	void Initialise(const char* vShader, const char* fShader, const char* gShader = "");
 };
 
 #endif // !SHADER_H
