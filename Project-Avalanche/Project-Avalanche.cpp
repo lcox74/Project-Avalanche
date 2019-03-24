@@ -9,6 +9,10 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "vendor/imgui/imgui.h"
+#include "vendor/imgui/imgui_impl_glfw.h"
+#include "vendor/imgui/imgui_impl_opengl3.h"
+
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -40,7 +44,6 @@ float lastFrame = 0.0f; // Time of last frame
 // Mouse
 float lastX = 400, lastY = 300;
 bool firstMouse = true;
-
 
 Camera Cam;
 
@@ -88,17 +91,35 @@ int main()
 	glViewport(0, 0, 800, 600); // Initialise Viewport
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	glfwSetCursorPosCallback(window, mouse_callback);
 	glfwSetScrollCallback(window, scroll_callback);
 
 	glEnable(GL_MULTISAMPLE); // Anti-Aliasing
-	
+
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
 
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
+
+	// ImGui Setup
+	// -------------------------------------------
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;  // Enable Keyboard Controls
+	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;   // Enable Gamepad Controls
+
+	// Setup Dear ImGui style
+	ImGui::StyleColorsDark();
+	//ImGui::StyleColorsClassic();
+
+	ImGui_ImplGlfw_InitForOpenGL(window, true);
+	ImGui_ImplOpenGL3_Init();
+
+	bool show_another_window = false;
+	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
 	Cam = Camera(glm::vec3(0, 0, 3));
 	Cam.nWidth = winWIDTH;
@@ -116,9 +137,8 @@ int main()
 	
 	Shader normalShader("Assets/Shaders/normal_visualization.shader");
 
-
 	std::vector<float> deltaTimeVec;
-	int maxTimeSmooth = 60;
+	size_t maxTimeSmooth = 60;
 
 	// Main Engine Loop
 	while (!glfwWindowShouldClose(window))
@@ -148,7 +168,46 @@ int main()
 		ball.Draw(lights);
 		if (normalsMode)
 			ball.Draw(normalShader);
-		
+
+		// ImGui
+		ImGui_ImplOpenGL3_NewFrame();
+		ImGui_ImplGlfw_NewFrame();
+		ImGui::NewFrame();
+
+		{
+			static float f = 0.0f;
+			static int counter = 0;
+
+			ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
+
+			ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
+			ImGui::Checkbox("Another Window", &show_another_window);
+
+			ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
+			ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
+
+			if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
+				counter++;
+			ImGui::SameLine();
+			ImGui::Text("counter = %d", counter);
+
+			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+			ImGui::End();
+		}
+
+		// 3. Show another simple window.
+		if (show_another_window)
+		{
+			ImGui::Begin("Another Window", &show_another_window);   // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
+			ImGui::Text("Hello from another window!");
+			if (ImGui::Button("Close Me"))
+				show_another_window = false;
+			ImGui::End();
+		}
+
+		ImGui::Render();
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
 		// Check events and swap buffers
 		glfwSwapBuffers(window);
 		glfwPollEvents();
@@ -161,7 +220,7 @@ int main()
 		}
 
 		double average = 0.0;
-		for (int i = 0; i < deltaTimeVec.size(); i++)
+		for (size_t i = 0; i < deltaTimeVec.size(); i++)
 			average += deltaTimeVec[i];
 		average /= deltaTimeVec.size();
 
