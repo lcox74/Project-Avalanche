@@ -72,25 +72,25 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(SolutionDir)bin\$(Platform)($(PlatformTarget))\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)bin\$(Platform)-$(Configuration)-$(PlatformTarget)\</OutDir>
     <IntDir>$(SolutionDir)obj\$(Platform)($(PlatformTarget))\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)-$(PlatformTarget)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(SolutionDir)bin\$(Platform)($(PlatformTarget))\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)bin\$(Platform)-$(Configuration)-$(PlatformTarget)\</OutDir>
     <IntDir>$(SolutionDir)obj\$(Platform)($(PlatformTarget))\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)-$(PlatformTarget)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(SolutionDir)bin\$(Platform)($(PlatformTarget))\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)bin\$(Platform)-$(Configuration)-$(PlatformTarget)\</OutDir>
     <IntDir>$(SolutionDir)obj\$(Platform)($(PlatformTarget))\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)-$(PlatformTarget)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(SolutionDir)bin\$(Platform)($(PlatformTarget))\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)bin\$(Platform)-$(Configuration)-$(PlatformTarget)\</OutDir>
     <IntDir>$(SolutionDir)obj\$(Platform)($(PlatformTarget))\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)-$(PlatformTarget)</TargetName>
   </PropertyGroup>
@@ -112,8 +112,13 @@
       <AdditionalDependencies>opengl32.lib;glfw3.lib;glfw3dll.lib;assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy /Y $(SolutionDir)Dependencies\ASSIMP\libs\assimp-vc140-mt.dll $(OutDir)</Command>
+      <Command>copy /Y $(SolutionDir)Dependencies\ASSIMP\libs\assimp-vc140-mt.dll $(OutDir)
+xcopy /E $(ProjectDir)Assets $(OutDir)Assets\ /y</Command>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>
+      </Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -133,8 +138,13 @@
       <AdditionalDependencies>opengl32.lib;glfw3.lib;glfw3dll.lib;assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy /Y $(SolutionDir)Dependencies\ASSIMP\libs\assimp-vc140-mt.dll $(OutDir)</Command>
+      <Command>copy /Y $(SolutionDir)Dependencies\ASSIMP\libs\assimp-vc140-mt.dll $(OutDir)
+xcopy /E $(ProjectDir)Assets $(OutDir)Assets\ /y</Command>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>
+      </Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -158,8 +168,13 @@
       <AdditionalDependencies>opengl32.lib;glfw3.lib;glfw3dll.lib;assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy /Y $(SolutionDir)Dependencies\ASSIMP\libs\assimp-vc140-mt.dll $(OutDir)</Command>
+      <Command>copy /Y $(SolutionDir)Dependencies\ASSIMP\libs\assimp-vc140-mt.dll $(OutDir)
+xcopy /E $(ProjectDir)Assets $(OutDir)Assets\ /y</Command>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>
+      </Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -183,8 +198,13 @@
       <AdditionalDependencies>opengl32.lib;glfw3.lib;glfw3dll.lib;assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy /Y $(SolutionDir)Dependencies\ASSIMP\libs\assimp-vc140-mt.dll $(OutDir)</Command>
+      <Command>copy /Y $(SolutionDir)Dependencies\ASSIMP\libs\assimp-vc140-mt.dll $(OutDir)
+xcopy /E $(ProjectDir)Assets $(OutDir)Assets\ /y</Command>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>
+      </Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\Dependencies\GLAD\src\glad.c" />
